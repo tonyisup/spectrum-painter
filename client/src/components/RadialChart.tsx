@@ -11,6 +11,7 @@ interface RadialChartProps {
   cellColors: Record<string, string>;
   onCellClick: (ring: number, segment: number) => void;
   userName: string;
+  rotation: number;
 }
 
 const TRAITS = [
@@ -20,7 +21,7 @@ const TRAITS = [
   "Routine", "Flexibility", "Stimming", "Meltdowns", "Masking"
 ];
 
-export function RadialChart({ selectedColor, cellColors, onCellClick, userName }: RadialChartProps) {
+export function RadialChart({ selectedColor, cellColors, onCellClick, userName, rotation }: RadialChartProps) {
   const [hoveredCell, setHoveredCell] = useState<string | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   
@@ -104,7 +105,8 @@ export function RadialChart({ selectedColor, cellColors, onCellClick, userName }
           width="600"
           height="600"
           viewBox="0 0 600 600"
-          className="max-w-full h-auto"
+          className="max-w-full h-auto transition-all duration-300"
+          style={{ transform: `rotate(${rotation}deg)` }}
         >
           {/* Grid circles */}
           {Array.from({ length: numRings }, (_, ring) => (

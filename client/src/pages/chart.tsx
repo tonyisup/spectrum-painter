@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Eraser, Save, Download, Upload, Info } from "lucide-react";
+import { Eraser, Save, Download, Upload, Info, RotateCcw, RotateCw } from "lucide-react";
 import type { Chart, InsertChart } from "@shared/schema";
 
 export default function ChartPage() {
@@ -15,6 +15,7 @@ export default function ChartPage() {
   const [cellColors, setCellColors] = useState<Record<string, string>>({});
   const [userName, setUserName] = useState("");
   const [currentChartId, setCurrentChartId] = useState<string | null>(null);
+  const [rotation, setRotation] = useState(0);
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const chartRef = useRef<HTMLDivElement>(null);
@@ -234,6 +235,7 @@ export default function ChartPage() {
                     cellColors={cellColors}
                     onCellClick={handleCellClick}
                     userName={userName}
+                    rotation={rotation}
                   />
                 </div>
               </CardContent>
@@ -248,6 +250,50 @@ export default function ChartPage() {
               selectedColor={selectedColor}
               onColorChange={setSelectedColor}
             />
+            
+            {/* Rotation Controls */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Rotate Chart</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Button
+                    onClick={() => setRotation(prev => prev - 18)}
+                    variant="outline"
+                    size="sm"
+                    data-testid="button-rotate-left"
+                  >
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    Left
+                  </Button>
+                  
+                  <span className="text-sm font-medium text-gray-600">
+                    {rotation}°
+                  </span>
+                  
+                  <Button
+                    onClick={() => setRotation(prev => prev + 18)}
+                    variant="outline"
+                    size="sm"
+                    data-testid="button-rotate-right"
+                  >
+                    <RotateCw className="h-4 w-4 mr-2" />
+                    Right
+                  </Button>
+                </div>
+                
+                <Button
+                  onClick={() => setRotation(0)}
+                  variant="outline"
+                  className="w-full"
+                  size="sm"
+                  data-testid="button-reset-rotation"
+                >
+                  Reset Rotation
+                </Button>
+              </CardContent>
+            </Card>
             
             {/* Actions Panel */}
             <Card>
@@ -330,6 +376,10 @@ export default function ChartPage() {
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                     Each trait shows intensity from center (low) to outer ring (high)
+                  </li>
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
+                    Use rotation controls to make trait labels easier to read
                   </li>
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
