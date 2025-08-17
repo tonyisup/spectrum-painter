@@ -70,19 +70,37 @@ export default function ChartPage() {
   });
 
   const handleCellClick = useCallback((ring: number, segment: number) => {
-    const cellKey = `${ring}-${segment}`;
-    setCellColors(prev => ({
-      ...prev,
-      [cellKey]: selectedColor
-    }));
+    // Fill all cells from center (ring 1) to clicked ring for this segment
+    setCellColors(prev => {
+      const newColors = { ...prev };
+      
+      // Clear any existing colors for this segment beyond the clicked ring
+      for (let r = ring + 1; r <= 6; r++) {
+        const clearKey = `${r}-${segment}`;
+        delete newColors[clearKey];
+      }
+      
+      // Fill from ring 1 to clicked ring
+      for (let r = 1; r <= ring; r++) {
+        const fillKey = `${r}-${segment}`;
+        newColors[fillKey] = selectedColor;
+      }
+      
+      return newColors;
+    });
     
     // Auto-save to localStorage
-    localStorage.setItem('adhdSpectrumChart', JSON.stringify({
-      ...JSON.parse(localStorage.getItem('adhdSpectrumChart') || '{}'),
-      cellColors: { ...cellColors, [cellKey]: selectedColor },
-      userName
-    }));
-  }, [selectedColor, cellColors, userName]);
+    setTimeout(() => {
+      setCellColors(currentColors => {
+        localStorage.setItem('adhdSpectrumChart', JSON.stringify({
+          ...JSON.parse(localStorage.getItem('adhdSpectrumChart') || '{}'),
+          cellColors: currentColors,
+          userName
+        }));
+        return currentColors;
+      });
+    }, 0);
+  }, [selectedColor, userName]);
 
   const clearAllCells = useCallback(() => {
     if (confirm("Are you sure you want to clear all cells?")) {
@@ -188,7 +206,7 @@ export default function ChartPage() {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <h1 className="text-2xl font-bold text-gray-900">Interactive ADHD Spectrum Chart</h1>
-          <p className="text-gray-600 mt-1">Click on cells to color your personal spectrum</p>
+          <p className="text-gray-600 mt-1">Click on rings to show trait intensity from center to that level</p>
         </div>
       </header>
 
@@ -307,7 +325,11 @@ export default function ChartPage() {
                   </li>
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
-                    Click on any cell in the chart to fill it with your selected color
+                    Click on any ring to fill from center to that level (like a bar chart)
+                  </li>
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
+                    Each trait shows intensity from center (low) to outer ring (high)
                   </li>
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
