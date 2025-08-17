@@ -2,7 +2,21 @@
 
 ## Overview
 
-This is a full-stack web application for creating and managing interactive radial charts to visualize ADHD spectrum traits. The application allows users to create personalized charts by selecting colors for different trait categories arranged in a circular, ring-based layout. Users can save, load, and export their charts for personal tracking or sharing purposes.
+This is a full-stack web application for creating and managing interactive radial charts to visualize ADHD spectrum traits. The application allows users to create personalized charts by selecting colors for different trait categories arranged in a circular, ring-based layout with bar chart functionality. Users can click on rings to fill from center outward (showing intensity levels), rotate the chart for better readability, and save, load, and export their charts for personal tracking or sharing purposes.
+
+## Recent Changes (August 17, 2025)
+
+### Bar Chart Functionality
+- Implemented click-to-fill from center to selected ring for each trait
+- Each trait now displays as an intensity bar (center = low, outer rings = high)
+- Clicking a lower ring automatically clears higher rings for that trait
+- Visual representation matches user's original ADHD spectrum chart concept
+
+### Chart Rotation Feature  
+- Added smooth rotation controls with left/right buttons (18° increments)
+- Perfect alignment with 20 trait segments for optimal label readability
+- Current rotation angle display and reset functionality
+- CSS transitions for smooth rotation animation
 
 ## User Preferences
 
