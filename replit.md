@@ -1,4 +1,4 @@
-# ADHD Spectrum Chart Application
+# Spectrum Painter
 
 ## Overview
 

@@ -206,7 +206,7 @@ export default function ChartPage() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <h1 className="text-2xl font-bold text-gray-900">Interactive ADHD Spectrum Chart</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Spectrum Painter</h1>
           <p className="text-gray-600 mt-1">Click on rings to show trait intensity from center to that level</p>
         </div>
       </header>
