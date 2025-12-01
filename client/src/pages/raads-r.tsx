@@ -3,11 +3,13 @@ import { questions } from "@/lib/raads-r-data";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RaadsRadialChart } from "@/components/RaadsRadialChart";
+import { RadialChart } from "@/components/RadialChart";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft } from "lucide-react";
 import { useLocation } from "wouter";
+import { generateAudhdChartData } from "@/lib/audhd-mapper";
 
 type Answer = 0 | 1 | 2 | 3;
 
@@ -57,6 +59,7 @@ export default function RaadsRPage() {
   const currentQuestion = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex) / questions.length) * 100;
   const currentScores = calculateScores();
+  const audhdChartData = generateAudhdChartData(answers);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -152,15 +155,32 @@ export default function RaadsRPage() {
           </div>
 
           {/* Right Column: Live Chart */}
-          <div className="lg:sticky lg:top-8">
+          <div className="lg:sticky lg:top-8 space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="text-center">
-                  {isCompleted ? "Final Results" : "Live Results"}
+                  {isCompleted ? "Final RAADS-R Results" : "Live RAADS-R Results"}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <RaadsRadialChart scores={currentScores} />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-center">
+                  AuDHD Spectrum Projection
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <RadialChart
+                  selectedColor="#6366F1"
+                  cellColors={audhdChartData.cellColors}
+                  onCellClick={() => {}}
+                  userName="Result Projection"
+                  rotation={0}
+                />
               </CardContent>
             </Card>
           </div>

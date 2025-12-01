@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from "react";
+import { AUDHD_TRAITS } from "@/lib/audhd-traits";
 
 interface CellData {
   ring: number;
@@ -13,13 +14,6 @@ interface RadialChartProps {
   userName: string;
   rotation: number;
 }
-
-const TRAITS = [
-  "Executive", "Special", "Organised", "Planning", "Hyperactivity",
-  "Attention", "Interests", "Processing", "Impulsivity", "Emotional",
-  "Working", "Memory", "Sensory", "Communication", "Social",
-  "Routine", "Flexibility", "Stimming", "Meltdowns", "Masking"
-];
 
 export function RadialChart({ selectedColor, cellColors, onCellClick, userName, rotation }: RadialChartProps) {
   const [hoveredCell, setHoveredCell] = useState<string | null>(null);
@@ -72,7 +66,7 @@ export function RadialChart({ selectedColor, cellColors, onCellClick, userName, 
   }, []);
   
   const getLabelPosition = useCallback((index: number) => {
-    const angle = (index * (360 / TRAITS.length)) * (Math.PI / 180) - Math.PI / 2;
+    const angle = (index * (360 / AUDHD_TRAITS.length)) * (Math.PI / 180) - Math.PI / 2;
     const labelRadius = maxRadius + 40;
     const x = centerX + Math.cos(angle) * labelRadius;
     const y = centerY + Math.sin(angle) * labelRadius;
@@ -169,7 +163,7 @@ export function RadialChart({ selectedColor, cellColors, onCellClick, userName, 
           )}
           
           {/* Trait labels */}
-          {TRAITS.map((trait, index) => {
+          {AUDHD_TRAITS.map((trait, index) => {
             const { x, y, angle } = getLabelPosition(index);
             
             return (
