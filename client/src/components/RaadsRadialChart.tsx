@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from "react";
+import { useRotateGesture } from "../hooks/useRotateGesture";
 
 interface CellData {
   ring: number;
@@ -41,6 +42,8 @@ const COLORS = [
 
 export function RaadsRadialChart({ scores, userName }: RaadsRadialChartProps) {
   const [hoveredCell, setHoveredCell] = useState<string | null>(null);
+  const chartRef = useRef<HTMLDivElement>(null);
+  const { rotation } = useRotateGesture(chartRef);
 
   const numRings = 6;
   const numSegments = 4;
@@ -126,7 +129,7 @@ export function RaadsRadialChart({ scores, userName }: RaadsRadialChartProps) {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-8">
+    <div className="flex flex-col items-center space-y-8" ref={chartRef}>
       <div className="text-center">
         <h2 className="text-xl font-semibold text-primary mb-2">RAADS-R RESULTS</h2>
         {userName && <div className="text-lg font-medium text-gray-700">{userName}</div>}
@@ -138,6 +141,7 @@ export function RaadsRadialChart({ scores, userName }: RaadsRadialChartProps) {
           height="600"
           viewBox="0 0 600 600"
           className="max-w-full h-auto"
+          style={{ transform: `rotate(${rotation}deg)`, transition: 'transform 0.1s linear' }}
         >
           {/* Grid circles */}
           {Array.from({ length: numRings }, (_, ring) => (
