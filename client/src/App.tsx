@@ -5,11 +5,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import ChartPage from "@/pages/chart";
+import RaadsRPage from "@/pages/raads-r";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={ChartPage} />
+      <Route path="/raads-r" component={RaadsRPage} />
       <Route component={NotFound} />
     </Switch>
   );
