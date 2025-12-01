@@ -10,6 +10,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { Eraser, Save, Download, Upload, Info, RotateCcw, RotateCw, Activity } from "lucide-react";
 import type { Chart, InsertChart } from "@shared/schema";
 import { useLocation } from "wouter";
+import { useRotateGesture } from "@/hooks/useRotateGesture";
 
 export default function ChartPage() {
   const [, setLocation] = useLocation();
@@ -21,6 +22,11 @@ export default function ChartPage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const chartRef = useRef<HTMLDivElement>(null);
+
+  useRotateGesture(chartRef, {
+    value: rotation,
+    onChange: setRotation
+  });
 
   // Load charts query
   const { data: charts = [] } = useQuery<Chart[]>({
