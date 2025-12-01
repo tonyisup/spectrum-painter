@@ -7,10 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Eraser, Save, Download, Upload, Info, RotateCcw, RotateCw } from "lucide-react";
+import { Eraser, Save, Download, Upload, Info, RotateCcw, RotateCw, Activity } from "lucide-react";
 import type { Chart, InsertChart } from "@shared/schema";
+import { useLocation } from "wouter";
 
 export default function ChartPage() {
+  const [, setLocation] = useLocation();
   const [selectedColor, setSelectedColor] = useState("#6366F1");
   const [cellColors, setCellColors] = useState<Record<string, string>>({});
   const [userName, setUserName] = useState("");
@@ -214,6 +216,14 @@ export default function ChartPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid lg:grid-cols-3 gap-8">
           
+          {/* Chart Container */}
+          <div className="lg:col-span-3 mb-4">
+             <Button onClick={() => setLocation("/raads-r")} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
+                <Activity className="mr-2 h-4 w-4" />
+                Take RAADS-R Assessment
+             </Button>
+          </div>
+
           {/* Chart Container */}
           <div className="lg:col-span-2">
             <Card className="border border-gray-200">
