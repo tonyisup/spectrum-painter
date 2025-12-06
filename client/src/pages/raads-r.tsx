@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { questions } from "@/lib/raads-r-data";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,17 +7,62 @@ import { RadialChart } from "@/components/RadialChart";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, RotateCcw } from "lucide-react";
 import { useLocation } from "wouter";
 import { generateAudhdChartData } from "@/lib/audhd-mapper";
 
 type Answer = 0 | 1 | 2 | 3;
 
+const STORAGE_KEYS = {
+  ANSWERS: "raads_r_answers",
+  CURRENT_INDEX: "raads_r_current_index",
+  IS_COMPLETED: "raads_r_is_completed",
+};
+
 export default function RaadsRPage() {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, Answer>>({});
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.CURRENT_INDEX);
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [answers, setAnswers] = useState<Record<number, Answer>>(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.ANSWERS);
+    return saved ? JSON.parse(saved) : {};
+  });
+  const [isCompleted, setIsCompleted] = useState(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.IS_COMPLETED);
+    return saved === "true";
+  });
   const [location, setLocation] = useLocation();
+
+  useEffect(() => {
+    localStorage.setItem(
+      STORAGE_KEYS.CURRENT_INDEX,
+      currentQuestionIndex.toString(),
+    );
+  }, [currentQuestionIndex]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.ANSWERS, JSON.stringify(answers));
+  }, [answers]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.IS_COMPLETED, isCompleted.toString());
+  }, [isCompleted]);
+
+  const handleReset = () => {
+    if (
+      confirm(
+        "Are you sure you want to reset your progress? This cannot be undone.",
+      )
+    ) {
+      localStorage.removeItem(STORAGE_KEYS.ANSWERS);
+      localStorage.removeItem(STORAGE_KEYS.CURRENT_INDEX);
+      localStorage.removeItem(STORAGE_KEYS.IS_COMPLETED);
+      setAnswers({});
+      setCurrentQuestionIndex(0);
+      setIsCompleted(false);
+    }
+  };
 
   const handleAnswer = (value: string) => {
     const answer = parseInt(value) as Answer;
@@ -64,10 +109,20 @@ export default function RaadsRPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-7xl mx-auto space-y-6">
-        <Button variant="ghost" onClick={() => setLocation("/")}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Home
-        </Button>
+        <div className="flex justify-between items-center">
+          <Button variant="ghost" onClick={() => setLocation("/")}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={handleReset}
+            className="text-red-500 hover:text-red-700 hover:bg-red-50"
+          >
+            <RotateCcw className="mr-2 h-4 w-4" />
+            Reset Progress
+          </Button>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* Left Column: Question Card */}
